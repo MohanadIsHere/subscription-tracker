@@ -34,6 +34,10 @@ export const signup = async (req, res, next) => {
       // sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    console.log('req.cookies.refreshToken : ',req.cookies);
+    console.log("res.cookies.refreshToken : ", res.cookies);
+
+    
 
     return res.status(201).json({
       success: true,

@@ -43,8 +43,8 @@ const errorMiddleware = (err, req, res, next) => {
       .json({
         message: error.message || "Server Error",
         success: false,
-        stack: error.stack || "",
-        errors: error.errors || [],
+        stack: error.stack || undefined,
+        errors: error.errors || undefined,
       });
   } catch (error) {
     next(error);

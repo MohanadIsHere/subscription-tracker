@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import connectToDatabase from "./database/connection.db.js";
 import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
@@ -8,16 +9,17 @@ import userRouter from "./routes/user.routes.js";
 const bootstrap = async (express, app) => {
   // Middlewares
   app.use(express.json());
+  app.use(cookieParser());
   app.use(arcjetMiddleware);
 
   // Connect to database
   await connectToDatabase();
 
   // Routes & Endpoints
-  app.use("/api/v1/auth", authRouter)
-  app.use("/api/v1/users", userRouter) 
-  app.use("/api/v1/subscriptions", subscriptionRouter) 
-  
+  app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/users", userRouter);
+  app.use("/api/v1/subscriptions", subscriptionRouter);
+
   app.get("/", (req, res) => {
     res.send("Welcome to Subscription Tracker API");
   });

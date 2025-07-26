@@ -15,6 +15,12 @@ export const signupValidationSchema = {
         .min(6)
         .max(100),
       confirmPassword: joi.string().required().valid(joi.ref("password")),
+      role : joi
+        .string()
+        .valid("user", "admin")
+        .default("user")
+        .lowercase()
+        .trim(),
     })
     .required()
     .options({

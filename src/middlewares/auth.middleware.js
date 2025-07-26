@@ -1,31 +1,33 @@
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env.js";
+import { ACCESS_TOKEN_SECRET } from "../config/env.js";
 import User from "../database/models/user.model.js";
+import { verifyToken } from "../utils/token/token.js";
+
 const authorize = async (req, res, next) => {
   try {
-    let token;
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
-    if (!token) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       const error = new Error("Unauthorized");
       error.statusCode = 401;
       throw error;
     }
-    const decoded = jwt.verify(token, JWT_SECRET);
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = verifyToken({ token, secret: ACCESS_TOKEN_SECRET });
+
     const user = await User.findById(decoded.userId);
     if (!user) {
       const error = new Error("Unauthorized");
       error.statusCode = 401;
       throw error;
     }
+
     req.user = user;
     next();
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
+
 export default authorize;

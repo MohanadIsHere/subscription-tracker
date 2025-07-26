@@ -1,14 +1,19 @@
 import { Router } from "express";
-import { signin, signup } from "../controllers/auth.controller.js";
-import { validation } from "../middlewares/validation.middleware.js";
-import { signupValidationSchema } from "../utils/validation/auth/signupValidationSchema.js";
+import {
+  logoutUser,
+  refreshAccessToken,
+  signin,
+  signup,
+} from "../controllers/auth.controller.js";
 import { signinValidationSchema } from "../utils/validation/auth/signinValidationSchema.js";
+import { signupValidationSchema } from "../utils/validation/auth/signupValidationSchema.js";
+import { validation } from "../middlewares/validation.middleware.js";
+
 const authRouter = Router();
 
-authRouter.post("/sign-up", validation(signupValidationSchema),signup)
-authRouter.post("/sign-in", validation(signinValidationSchema),signin)
-authRouter.post("/sign-out", (req, res) => {
-  res.send("Sign out");
-})
+authRouter.post("/sign-up", validation(signupValidationSchema), signup);
+authRouter.post("/sign-in", validation(signinValidationSchema), signin);
+authRouter.post("/sign-out", logoutUser);
+authRouter.post("/refresh", refreshAccessToken);
 
-export default authRouter
+export default authRouter;

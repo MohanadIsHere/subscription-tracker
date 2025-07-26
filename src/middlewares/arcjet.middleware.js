@@ -6,23 +6,20 @@ const arcjetMiddleware = async (req, res, next) => {
 
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
-        return res.status(429).json({
-          message: "Rate limit exceeded",
-          success: false,
-        });
+        const error = new Error("Rate limit exceeded");
+        error.statusCode = 429;
+        throw error;
       }
 
       if (decision.reason.isBot()) {
-        return res.status(403).json({
-          message: "Bot detected",
-          success: false,
-        });
+        const error = new Error("Bot detected");
+        error.statusCode = 403;
+        throw error;
       }
 
-      return res.status(403).json({
-        message: "Access denied",
-        success: false,
-      });
+      const error = new Error("Access denied");
+      error.statusCode = 403;
+      throw error;
     }
 
     next();
@@ -31,6 +28,5 @@ const arcjetMiddleware = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export default arcjetMiddleware;

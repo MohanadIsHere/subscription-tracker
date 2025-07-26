@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import dayjs from "dayjs";
 const subscriptionSchema = new mongoose.Schema(
   {
     title: {
@@ -104,20 +104,27 @@ const subscriptionSchema = new mongoose.Schema(
   }
 );
 subscriptionSchema.pre("save", function (next) {
-  if (!this.renewalDate) {
-    this.renewalDate = new Date(this.startDate);
+  const dateStr = dayjs().format("YYYY-MM-DD");
+  const timeStr = dayjs().format("HH:mm");
 
-    const frequencyValues = {
+  const startDateTime = dayjs(`${dateStr} ${timeStr}`, "YYYY-MM-DD HH:mm");
+
+  if (!this.startDate) {
+    this.startDate = startDateTime.toDate();
+  }
+
+  if (!this.renewalDate) {
+    const frequencyDays = {
       daily: 1,
       weekly: 7,
       monthly: 30,
       yearly: 365,
     };
 
-    const daysToAdd = frequencyValues[this.frequency];
-
-    if (daysToAdd) {
-      this.renewalDate.setDate(this.renewalDate.getDate() + daysToAdd);
+    const days = frequencyDays[this.frequency];
+    if (days) {
+      const renewalDateTime = dayjs(this.startDate).add(days, "day");
+      this.renewalDate = renewalDateTime.toDate();
     }
   }
 
@@ -127,6 +134,7 @@ subscriptionSchema.pre("save", function (next) {
 
   next();
 });
+
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);
 export default Subscription;

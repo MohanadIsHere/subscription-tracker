@@ -1,5 +1,5 @@
 import User from "../database/models/user.model.js";
-import {  SALT_ROUNDS } from "../config/env.js";
+import { SALT_ROUNDS } from "../config/env.js";
 import { hash, compare } from "../utils/hashing/hashing.js";
 import {
   generateAccessToken,
@@ -32,11 +32,8 @@ export const signup = async (req, res, next) => {
       httpOnly: true,
       // secure: true,
       // sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-   
-
-    
 
     return res.status(201).json({
       success: true,

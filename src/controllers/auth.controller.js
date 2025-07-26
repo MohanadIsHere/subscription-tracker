@@ -1,7 +1,7 @@
 import User from "../database/models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
+import { JWT_EXPIRES_IN, JWT_SECRET, SALT_ROUNDS } from "../config/env.js";
 export const signup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body || {};
@@ -11,8 +11,8 @@ export const signup = async (req, res, next) => {
         message: "name,email and password are required fields",
       });
     }
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const salt = bcrypt.genSalt(SALT_ROUNDS);
+    const hashedPassword = bcrypt.hashSync(password, salt);
     if (await User.findOne({ email })) {
       const error = new Error("User already exists");
       error.statusCode = 409;

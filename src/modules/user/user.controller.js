@@ -1,6 +1,6 @@
-import { SALT_ROUNDS } from "../config/env.js";
-import User from "../database/models/user.model.js";
-import { compare, hash } from "../utils/hashing/hashing.js";
+import { SALT_ROUNDS } from "../../config/env.js";
+import User from "../../database/models/user.model.js";
+import { compare, hash } from "../../utils/hashing/hashing.js";
 
 export const getUser = async (req, res, next) => {
   try {

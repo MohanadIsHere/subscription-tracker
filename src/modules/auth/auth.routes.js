@@ -4,10 +4,10 @@ import {
   refreshAccessToken,
   signin,
   signup,
-} from "../controllers/auth.controller.js";
-import { signinValidationSchema } from "../utils/validation/auth/signinValidationSchema.js";
-import { signupValidationSchema } from "../utils/validation/auth/signupValidationSchema.js";
-import { validation } from "../middlewares/validation.middleware.js";
+} from "./auth.controller.js"
+import { signinValidationSchema } from "../../utils/validation/auth/signinValidationSchema.js";
+import { signupValidationSchema } from "../../utils/validation/auth/signupValidationSchema.js";
+import { validation } from "../../middlewares/validation.middleware.js";
 
 const authRouter = Router();
 

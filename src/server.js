@@ -2,9 +2,10 @@ import cookieParser from "cookie-parser";
 import connectToDatabase from "./database/connection.db.js";
 import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
-import authRouter from "./routes/auth.routes.js";
-import subscriptionRouter from "./routes/subscription.routes.js";
-import userRouter from "./routes/user.routes.js";
+import authRouter from "./modules/auth/auth.routes.js";
+import userRouter from "./modules/user/user.routes.js";
+import subscriptionRouter from "./modules/subscription/subscription.routes.js";
+
 
 const bootstrap = async (express, app) => {
   // Middlewares

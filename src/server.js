@@ -22,7 +22,7 @@ const bootstrap = async (express, app) => {
   app.use("/api/v1/subscriptions", subscriptionRouter);
 
   app.get("/", (req, res) => {
-    res.send("Welcome to Subscription Tracker API");
+    res.send("Welcome to Subscription Tracker API 🚀 !");
   });
 
   // Not found middleware

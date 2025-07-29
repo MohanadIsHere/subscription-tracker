@@ -95,14 +95,18 @@ export const signin = async (req, res, next) => {
 export const refreshAccessToken = (req, res, next) => {
   try {
     const token = req.cookies.refreshToken;
-    if (!token) return res.sendStatus(401);
+    if (!token) {
+      const error = new Error("Unauthorized");
+      error.statusCode = 401;
+      throw error;
+    }
 
     const payload = verifyRefreshToken(token);
     const accessToken = generateAccessToken({ userId: payload._id });
 
     return res.status(200).json({
       success: true,
-      message: "Access token refreshed",
+      message: "Access token refreshed successfully",
       data: {
         accessToken,
       },
@@ -114,5 +118,39 @@ export const refreshAccessToken = (req, res, next) => {
 
 export const logoutUser = (req, res, next) => {
   res.clearCookie("refreshToken");
-  return res.status(204).end();
+  return res
+    .status(204)
+    .json({ message: "Signed out successfully", success: true });
+};
+export const resetPassword = async (req, res, next) => {
+  try {
+    const password = req.body || {};
+    const { user } = req.user;
+    if (!password) {
+      const error = new Error("password is required");
+      error.statusCode = 400;
+      throw error;
+    }
+    const isOldPasswordMatch = compare({
+      plainText: password,
+      hashed: user.password,
+    });
+    if (isOldPasswordMatch) {
+      const error = new Error("New password cannot be the same as the old one");
+      error.statusCode = 400;
+      throw error;
+    }
+    const newPassword = hash({ plainText: password, saltRounds: SALT_ROUNDS });
+    await User.updateOne(
+      { _id: user._id },
+      {
+        password: newPassword,
+      }
+    );
+    return res
+      .status(200)
+      .json({ message: "Password reset successfully", success: true });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -1,11 +1,11 @@
-import User from "../database/models/user.model.js";
-import {  SALT_ROUNDS } from "../config/env.js";
-import { hash, compare } from "../utils/hashing/hashing.js";
+import User from "../../database/models/user.model.js";
+import { SALT_ROUNDS } from "../../config/env.js";
+import { hash, compare } from "../../utils/hashing/hashing.js";
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from "../utils/token/token.js";
+} from "../../utils/token/token.js";
 
 export const signup = async (req, res, next) => {
   try {
@@ -32,11 +32,8 @@ export const signup = async (req, res, next) => {
       httpOnly: true,
       // secure: true,
       // sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-   
-
-    
 
     return res.status(201).json({
       success: true,
@@ -46,8 +43,8 @@ export const signup = async (req, res, next) => {
         accessToken,
       },
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -90,8 +87,8 @@ export const signin = async (req, res, next) => {
         accessToken,
       },
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -110,8 +107,8 @@ export const refreshAccessToken = (req, res, next) => {
         accessToken,
       },
     });
-  } catch (err) {
-    return res.sendStatus(403);
+  } catch (error) {
+    next(error);
   }
 };
 
